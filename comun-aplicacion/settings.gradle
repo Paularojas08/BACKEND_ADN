@@ -1,0 +1,4 @@
+include 'comun-aplicacion'
+include 'comun-dominio'
+include 'comun-infraestructura'
+include 'comun-test'
