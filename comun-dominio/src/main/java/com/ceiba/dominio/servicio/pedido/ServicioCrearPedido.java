@@ -17,6 +17,7 @@ import com.ceiba.dominio.servicio.builder.DetallePedidoBuilder;
 import com.ceiba.dominio.servicio.builder.PedidoBuilder;
 import com.ceiba.dominio.servicio.pedido.interfaces.ServicioSolicitudCrearPedido;
 import com.ceiba.dominio.utils.EstadoPedido;
+import com.ceiba.dominio.utils.UUIDUtil;
 import com.ceiba.dominio.utils.validation.ReglaValidarPrecioPedido;
 import com.ceiba.dominio.utils.validation.ReglasDeNegocio;
 
@@ -46,11 +47,11 @@ public class ServicioCrearPedido implements ServicioSolicitudCrearPedido {
 		Pedido pedido = contruirPedidoInicial(precioPedido);
 		validar(pedido);
 		repositorioPedido.crearPedido(pedido);
-		List<DetallePedido> detallePedidos = construirDetallesPedido(pedido.getId(), solicitudPedido.getSolicitudPedidoProductos());
+		List<DetallePedido> detallePedidos = construirDetallesPedido(pedido, solicitudPedido.getSolicitudPedidoProductos());
 		repositorioDetallePedido.crearDetallesPedido(detallePedidos);
 	}
 
-	private double calcularPrecioPedido(List<SolicitudPedidoProducto> pedidoInicialProducto, Long idMunicipio) {
+	public double calcularPrecioPedido(List<SolicitudPedidoProducto> pedidoInicialProducto, Long idMunicipio) {
 		List<String> identificadoresProductos = pedidoInicialProducto.stream()
 				.map(SolicitudPedidoProducto::getCodigoProducto).collect(Collectors.toList());
 		Double precioPedido = repositorioProducto.obtenerPrecioTotalProductos(identificadoresProductos);
@@ -60,13 +61,14 @@ public class ServicioCrearPedido implements ServicioSolicitudCrearPedido {
 
 	private Pedido contruirPedidoInicial(Double precioPedido) {
 		return pedidoBuilder.build().conEstado(EstadoPedido.CREADO).conFechaPedido(LocalDate.now())
-				.conPrecioTotal(precioPedido).toPedido();	}
+				.conPrecioTotal(precioPedido).conIdDeSeguimiento(UUIDUtil.generarUUID()).toPedido();	
+	}
 
-	private List<DetallePedido> construirDetallesPedido(Long pedidoId, List<SolicitudPedidoProducto> solicitudPedidoProductos) {
+	private List<DetallePedido> construirDetallesPedido(Pedido pedido, List<SolicitudPedidoProducto> solicitudPedidoProductos) {
 		return solicitudPedidoProductos.stream().map(solicitudProducto -> {
-			return detallePedidoBuilder.build().conPedidoId(pedidoId)
+			return detallePedidoBuilder.build().conPedido(pedido)
 					.conCantidadPedida(solicitudProducto.getCantidad())
-					.conProductoId(solicitudProducto.getCodigoProducto()).toDetallePedido();
+					.conProducto(repositorioProducto.obtener(solicitudProducto.getCodigoProducto())).toDetallePedido();
 		}).collect(Collectors.toList());
 	}
 

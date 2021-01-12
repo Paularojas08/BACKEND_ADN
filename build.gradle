@@ -35,6 +35,7 @@ allprojects {
 	project.ext.mockito = ['org.mockito:mockito-all:1.10.19']
 	project.ext.h2 = ["com.h2database:h2:1.4.194"]
 	project.ext.actuator=["org.springframework.boot:spring-boot-starter-actuator:2.1.6.RELEASE"]
-	
-
+	project.ext.springtest=["org.springframework.boot:spring-boot-starter-test"]
+	project.ext.springjpa = ["org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"]
+    project.ext.springweb=["org.springframework.boot:spring-boot-starter-web"]
 }
