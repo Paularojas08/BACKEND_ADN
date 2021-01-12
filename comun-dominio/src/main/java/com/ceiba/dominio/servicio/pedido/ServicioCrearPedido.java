@@ -47,11 +47,12 @@ public class ServicioCrearPedido implements ServicioSolicitudCrearPedido {
 		Pedido pedido = contruirPedidoInicial(precioPedido);
 		validar(pedido);
 		repositorioPedido.crearPedido(pedido);
-		List<DetallePedido> detallePedidos = construirDetallesPedido(pedido, solicitudPedido.getSolicitudPedidoProductos());
+		
+		List<DetallePedido> detallePedidos = construirDetallesPedido(pedido.getId(), solicitudPedido.getSolicitudPedidoProductos());
 		repositorioDetallePedido.crearDetallesPedido(detallePedidos);
 	}
 
-	public double calcularPrecioPedido(List<SolicitudPedidoProducto> pedidoInicialProducto, Long idMunicipio) {
+	private double calcularPrecioPedido(List<SolicitudPedidoProducto> pedidoInicialProducto, Long idMunicipio) {
 		List<String> identificadoresProductos = pedidoInicialProducto.stream()
 				.map(SolicitudPedidoProducto::getCodigoProducto).collect(Collectors.toList());
 		Double precioPedido = repositorioProducto.obtenerPrecioTotalProductos(identificadoresProductos);
@@ -59,17 +60,18 @@ public class ServicioCrearPedido implements ServicioSolicitudCrearPedido {
 		return precioPedido + tarifaMunicipio;
 	}
 
+
 	private Pedido contruirPedidoInicial(Double precioPedido) {
 		return pedidoBuilder.build().conEstado(EstadoPedido.CREADO).conFechaPedido(LocalDate.now())
 				.conPrecioTotal(precioPedido).conIdDeSeguimiento(UUIDUtil.generarUUID()).toPedido();	
 	}
 
-	private List<DetallePedido> construirDetallesPedido(Pedido pedido, List<SolicitudPedidoProducto> solicitudPedidoProductos) {
+	private List<DetallePedido> construirDetallesPedido(Long pedidoId, List<SolicitudPedidoProducto> solicitudPedidoProductos) {
 		return solicitudPedidoProductos.stream().map(solicitudProducto -> {
-			return detallePedidoBuilder.build().conPedido(pedido)
-					.conCantidadPedida(solicitudProducto.getCantidad())
-					.conProducto(repositorioProducto.obtener(solicitudProducto.getCodigoProducto())).toDetallePedido();
-		}).collect(Collectors.toList());
+			return detallePedidoBuilder.build().conPedidoId(pedidoId)
+					.conCantidadPedida(solicitudProducto.getCantidad()).
+					conProductoId(solicitudProducto.getCodigoProducto()).toDetallePedido();
+		}).collect(Collectors.toList());     
 	}
 
 	private void validar(Pedido pedido) {

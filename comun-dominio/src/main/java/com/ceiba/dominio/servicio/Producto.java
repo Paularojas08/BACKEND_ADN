@@ -1,11 +1,12 @@
 package com.ceiba.dominio.servicio;
 
 public class Producto {
-	
 	private Long id;
 	private String codigo;
 	private String nombre;
 	private double precio;
+
+	
 
 	public Long getId() {
 		return id;
@@ -38,4 +39,5 @@ public class Producto {
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
+
 }

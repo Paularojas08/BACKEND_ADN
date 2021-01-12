@@ -1,8 +1,6 @@
 package com.ceiba.dominio.servicio.builder;
 
 import com.ceiba.dominio.servicio.DetallePedido;
-import com.ceiba.dominio.servicio.Pedido;
-import com.ceiba.dominio.servicio.Producto;
 
 public class DetallePedidoBuilder {
 	private DetallePedido detallePedido;
@@ -13,19 +11,16 @@ public class DetallePedidoBuilder {
 	}
 
 	public DetallePedidoBuilder conId(Long id) {
-		detallePedido.setId(null);
+		detallePedido.setId(id);
 		return this;
 	}
 	
-	public DetallePedidoBuilder conPedido(Pedido pedido) {
-		detallePedido.setPedido(pedido);
+	public DetallePedidoBuilder conPedidoId(Long pedidoId) {
+		detallePedido.setPedidoId(pedidoId);
 		return this;
 	}
 	
-	public DetallePedidoBuilder conProducto(Producto producto) {
-		detallePedido.setProducto(producto);
-		return this;
-	}
+	
 	public DetallePedidoBuilder conCantidadPedida(int cantidadPedida) {
 		detallePedido.setCantidadPedida(cantidadPedida);
 		return this;
@@ -34,4 +29,11 @@ public class DetallePedidoBuilder {
 	public DetallePedido toDetallePedido() {
 		return detallePedido;
 	}
+
+	public DetallePedidoBuilder conProductoId(String codigoProducto) {
+		detallePedido.setProductoId(codigoProducto);
+		return this;
+	}
+
+	
 }

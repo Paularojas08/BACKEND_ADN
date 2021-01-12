@@ -36,12 +36,12 @@ public final class PedidoBuilder {
 		return this;
 	}
 	
+	public Pedido toPedido() {
+		return pedido;
+	}
+
 	public PedidoBuilder conIdDeSeguimiento(String idSeguimiento) {
 		pedido.setIdentificadorSeguimiento(idSeguimiento);
 		return this;
-	}
-	
-	public Pedido toPedido() {
-		return pedido;
 	}
 }

@@ -13,7 +13,7 @@ public interface RepositorioPedido {
 
 	boolean eliminarPedido(Long idPedido);
 
-	Pedido obtenerPedidoPorIdentificadorSeguimiento(String identificadorSeguimiento);
+	Long obtenerPedidoPorIdentificadorSeguimiento(String identificadorSeguimiento);
 
 	List<DetallePedido> obtenerDetallePedido(Long idPedido);	
 }

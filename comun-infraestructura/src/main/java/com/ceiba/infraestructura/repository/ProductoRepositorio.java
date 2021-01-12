@@ -2,28 +2,23 @@ package com.ceiba.infraestructura.repository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ceiba.dominio.repositorio.RepositorioProducto;
 import com.ceiba.dominio.servicio.Producto;
-import com.ceiba.infraestructura.builder.ProductoBuilder;
-import com.ceiba.infraestructura.dao.ProductoDao;
+import com.ceiba.infraestructura.repository.query.QueryConstant;
 
 @Repository
-public class ProductoRepositorio  implements RepositorioProducto {
+public class ProductoRepositorio extends BaseRepositorio implements RepositorioProducto{
 
-	@Autowired
-	private ProductoDao productoDao; 
-	
 	@Override
 	public Producto obtener(String codigo) {
-		return ProductoBuilder.convertirADominio(productoDao.obtenerProductoPorCodigo(codigo));
-		
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Double obtenerPrecioTotalProductos(List<String> identificadoresProductos) {
-		return productoDao.obtenerPrecioTotalProductos(identificadoresProductos);
+		return this.customNamedParameterJdbcTemplate.obtenerDoubleValue("test", identificadoresProductos, QueryConstant.QUERY_OBTENER_PRECIO_TOTAL_PRODUCTOS);
 	}
 }

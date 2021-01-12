@@ -10,7 +10,7 @@ public class ServicioObtenerPedido {
 		this.repositorioPedido = repositorioPedido;
 	}
 
-	public Pedido ejecutar(String identificadorSeguimiento) {
+	public Long ejecutar(String identificadorSeguimiento) {
 		return this.repositorioPedido.obtenerPedidoPorIdentificadorSeguimiento(identificadorSeguimiento);
 	}
 }

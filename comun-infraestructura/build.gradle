@@ -26,5 +26,5 @@ dependencies {
 	implementation project(':comun-aplicacion')
 	
 	implementation "org.postgresql:postgresql:42.2.18"
-	implementation project.ext.springjpa	
+	
 }

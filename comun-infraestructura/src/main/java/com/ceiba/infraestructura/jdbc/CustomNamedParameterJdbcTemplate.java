@@ -4,11 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ceiba.dominio.servicio.Pedido;
+import com.ceiba.dominio.utils.EstadoPedido;
 import com.ceiba.infraestructura.excepcion.ExcepcionTecnica;
 
+import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -45,17 +48,30 @@ public class CustomNamedParameterJdbcTemplate {
 	    return namedParameterJdbcTemplate.queryForObject(sql, paramSource, Double.class);
 	}
 	
+	public Long  obtenerPedido(String paramName, Object object,String sql) {
+		MapSqlParameterSource paramSource = crearParametroUnico(paramName, object);
+	    return namedParameterJdbcTemplate.queryForObject(sql, paramSource, Long.class);
+	}
+	
 	//List<Pedido> pedidos = namedParameterJdbcTemplate.query(sql, new BeanPropertyRowMapper<Pedido>(Pedido.class));
 		
 	private MapSqlParameterSource crearParametros(Object object) {
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		List<EstadoPedido> estados= Arrays.asList(EstadoPedido.values());
 		Field[] fields = object.getClass().getDeclaredFields();
+		
+		
 		for (int i = 0; i < fields.length; i++) {
 			try {
 				Field field = fields[i];
 				if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers())) {
+					
 					field.setAccessible(true);
-					paramSource.addValue(field.getName(), field.isEnumConstant() ? field.get(object) + "" : field.get(object));
+					Object valorCampo=field.get(object);
+					if(estados.contains(valorCampo)) {
+						valorCampo=valorCampo.toString();
+					}
+					paramSource.addValue(field.getName(), valorCampo);
 					field.setAccessible(false);
 				}
 			} catch (Exception e) {

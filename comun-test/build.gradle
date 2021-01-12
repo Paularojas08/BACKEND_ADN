@@ -1,13 +1,5 @@
-plugins {
-	id 'org.springframework.boot' version '2.1.8.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id 'jacoco'
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -19,12 +11,5 @@ dependencies {
 	implementation project.ext.h2
 	implementation project.ext.mockito
 	implementation project.ext.junit
-	implementation project.ext.springtest
 	implementation project(':comun-dominio')
-	implementation project(':comun-aplicacion')
-    implementation project.ext.springweb
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
-    
-    
-    
 }

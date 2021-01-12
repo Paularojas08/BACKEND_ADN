@@ -2,35 +2,26 @@ package com.ceiba.infraestructura.repository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Repository;
 
 import com.ceiba.dominio.repositorio.RepositorioPedido;
 import com.ceiba.dominio.servicio.DetallePedido;
 import com.ceiba.dominio.servicio.Pedido;
-import com.ceiba.infraestructura.builder.PedidoBuilder;
-import com.ceiba.infraestructura.dao.PedidoDao;
-import com.ceiba.infraestructura.model.PedidoModelo;
+import com.ceiba.infraestructura.repository.query.QueryConstant;
 
 @Repository
-public class PedidoRepositorio  implements RepositorioPedido {
-
-	@Autowired
-	private PedidoDao pedidoDao;
-
-	private PedidoModelo buildPedidoModelo(Pedido pedido) {
-		return PedidoBuilder.convertirAModelo(pedido);
-	}
+public class PedidoRepositorio extends BaseRepositorio implements RepositorioPedido {
 
 	@Override
 	public void crearPedido(Pedido pedido) {
-		PedidoModelo pedidoCreado = pedidoDao.save(buildPedidoModelo(pedido));
-		pedido.setId(pedidoCreado.getId());
+		this.customNamedParameterJdbcTemplate.crear(pedido, QueryConstant.QUERY_SQL_CREAR_PEDIDO);
+	    pedido.setId(obtenerPedidoPorIdentificadorSeguimiento(pedido.getIdentificadorSeguimiento()));
 	}
 
 	@Override
 	public Pedido actualizarPedido(Pedido pedido) {
-		return pedido;
+		return null;
 	}
 
 	@Override
@@ -39,8 +30,9 @@ public class PedidoRepositorio  implements RepositorioPedido {
 	}
 
 	@Override
-	public Pedido obtenerPedidoPorIdentificadorSeguimiento(String identificadorSeguimiento) {
-		return null;
+	public Long obtenerPedidoPorIdentificadorSeguimiento(String identificadorSeguimiento) {
+		return this.customNamedParameterJdbcTemplate.obtenerPedido("idSeguimiento",identificadorSeguimiento, QueryConstant.QUERY_SQL_OBTENER_PEDIDO);
+		
 	}
 
 	@Override
